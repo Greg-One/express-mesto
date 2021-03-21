@@ -1,6 +1,7 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
+const usersRoute = require('./routes/users');
 
 const { PORT = 3000 } = process.env;
 
@@ -13,11 +14,7 @@ mongoose.connect('mongodb://localhost:27017/mestodb', {
   useFindAndModify: false,
 });
 
-app.get('/', (req, res) => {
-  res.send(`
-  <h1>HELLO</h1>
-  `);
-});
+app.use('/', usersRoute);
 
 app.listen(PORT, () => {
   console.log(`Server starts on port ${PORT}`);
