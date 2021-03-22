@@ -18,7 +18,7 @@ const createCard = (req, res) => {
     });
 };
 
-const removeCard = (req, res) => {
+const deleteCard = (req, res) => {
   const { cardId } = req.params;
 
   Card.findByIdAndDelete(cardId)
@@ -28,4 +28,30 @@ const removeCard = (req, res) => {
     });
 };
 
-module.exports = { getCards, createCard, removeCard };
+const addCardLike = (req, res) => {
+  const { cardId } = req.params;
+
+  Card.findByIdAndUpdate(cardId, { $addToSet: { likes: req.user._id } })
+    .then((card) => res.status(200).send(card))
+    .catch((err) => {
+      res.status(500).send({ message: `Error occured: ${err}` });
+    });
+};
+
+const removeCardLike = (req, res) => {
+  const { cardId } = req.params;
+
+  Card.findByIdAndUpdate(cardId, { $pull: { likes: req.user._id } })
+    .then((card) => res.status(200).send(card))
+    .catch((err) => {
+      res.status(500).send({ message: `Error occured: ${err}` });
+    });
+};
+
+module.exports = {
+  getCards,
+  createCard,
+  deleteCard,
+  addCardLike,
+  removeCardLike,
+};
