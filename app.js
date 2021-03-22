@@ -2,6 +2,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const usersRoute = require('./routes/users');
+const cardRoute = require('./routes/cards');
 
 const { PORT = 3000 } = process.env;
 
@@ -22,7 +23,7 @@ app.use((req, res, next) => {
   next();
 });
 
-app.use('/', usersRoute);
+app.use('/', usersRoute, cardRoute);
 
 app.listen(PORT, () => {
   console.log(`Server starts on port ${PORT}`);
