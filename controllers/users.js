@@ -9,9 +9,9 @@ const getUsers = (req, res) => {
 };
 
 const getUserById = (req, res) => {
-  const { id } = req.params;
+  const { userId } = req.params;
 
-  User.findById(id)
+  User.findById(userId)
     .then((user) => res.status(200).send(user))
     .catch((err) => {
       res.status(500).send({ message: `Error occured: ${err}` });
