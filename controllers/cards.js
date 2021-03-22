@@ -18,4 +18,14 @@ const createCard = (req, res) => {
     });
 };
 
-module.exports = { getCards, createCard };
+const removeCard = (req, res) => {
+  const { cardId } = req.params;
+
+  Card.findByIdAndDelete(cardId)
+    .then((card) => res.status(200).send(card))
+    .catch((err) => {
+      res.status(500).send({ message: `Error occured: ${err}` });
+    });
+};
+
+module.exports = { getCards, createCard, removeCard };
