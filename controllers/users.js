@@ -26,4 +26,28 @@ const createUser = (req, res) => {
     .catch((err) => res.status(500).send({ message: `Error occured: ${err}` }));
 };
 
-module.exports = { getUsers, getUserById, createUser };
+const updateUserInfo = (req, res) => {
+  const { name, about } = req.body;
+  const { id } = req.user._id;
+
+  User.findByIdAndUpdate(id, { name, about })
+    .then((user) => res.status(200).send(user))
+    .catch((err) => res.status(500).send({ message: `Error occured: ${err}` }));
+};
+
+const updateUserAvatar = (req, res) => {
+  const { avatar } = req.body;
+  const { id } = req.user._id;
+
+  User.findByIdAndUpdate(id, { avatar })
+    .then((user) => res.status(200).send(user))
+    .catch((err) => res.status(500).send({ message: `Error occured: ${err}` }));
+};
+
+module.exports = {
+  getUsers,
+  getUserById,
+  createUser,
+  updateUserInfo,
+  updateUserAvatar,
+};
