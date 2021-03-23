@@ -12,10 +12,13 @@ const getUserById = (req, res) => {
   const { userId } = req.params;
 
   User.findById(userId)
-    .then((user) => res.status(200).send(user))
-    .catch((err) => {
-      res.status(500).send({ message: `Error occured: ${err}` });
-    });
+    .then((user) => {
+      if (!user) {
+        res.status(404).send({ message: 'User not found' });
+      }
+      res.status(200).send(user);
+    })
+    .catch((err) => res.status(500).send({ message: `Error occured: ${err}` }));
 };
 
 const createUser = (req, res) => {
@@ -23,7 +26,13 @@ const createUser = (req, res) => {
 
   User.create({ name, about, avatar })
     .then((user) => res.status(200).send(user))
-    .catch((err) => res.status(500).send({ message: `Error occured: ${err}` }));
+    .catch((err) => {
+      if (err.name === 'ValidationError') {
+        res.status(400).send({ message: 'Validation error' });
+      } else {
+        res.status(500).send({ message: `Error occured: ${err}` });
+      }
+    });
 };
 
 const updateUserInfo = (req, res) => {
@@ -31,8 +40,19 @@ const updateUserInfo = (req, res) => {
   const { id } = req.user._id;
 
   User.findByIdAndUpdate(id, { name, about })
-    .then((user) => res.status(200).send(user))
-    .catch((err) => res.status(500).send({ message: `Error occured: ${err}` }));
+    .then((user) => {
+      if (!user) {
+        res.status(404).send({ message: 'User not found' });
+      }
+      res.status(200).send(user);
+    })
+    .catch((err) => {
+      if (err.name === 'ValidationError') {
+        res.status(400).send({ message: 'Validation error' });
+      } else {
+        res.status(500).send({ message: `Error occured: ${err}` });
+      }
+    });
 };
 
 const updateUserAvatar = (req, res) => {
@@ -40,8 +60,19 @@ const updateUserAvatar = (req, res) => {
   const { id } = req.user._id;
 
   User.findByIdAndUpdate(id, { avatar })
-    .then((user) => res.status(200).send(user))
-    .catch((err) => res.status(500).send({ message: `Error occured: ${err}` }));
+    .then((user) => {
+      if (!user) {
+        res.status(404).send({ message: 'User not found' });
+      }
+      res.status(200).send(user);
+    })
+    .catch((err) => {
+      if (err.name === 'ValidationError') {
+        res.status(400).send({ message: 'Validation error' });
+      } else {
+        res.status(500).send({ message: `Error occured: ${err}` });
+      }
+    });
 };
 
 module.exports = {
