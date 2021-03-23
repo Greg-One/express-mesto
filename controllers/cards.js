@@ -40,7 +40,11 @@ const deleteCard = (req, res) => {
 const addCardLike = (req, res) => {
   const { cardId } = req.params;
 
-  Card.findByIdAndUpdate(cardId, { $addToSet: { likes: req.user._id } })
+  Card.findByIdAndUpdate(
+    cardId,
+    { $addToSet: { likes: req.user._id } },
+    { new: true }
+  )
     .then((card) => res.status(200).send(card))
     .catch((err) => {
       if (err.name === 'CastError') {
@@ -54,7 +58,11 @@ const addCardLike = (req, res) => {
 const removeCardLike = (req, res) => {
   const { cardId } = req.params;
 
-  Card.findByIdAndUpdate(cardId, { $pull: { likes: req.user._id } })
+  Card.findByIdAndUpdate(
+    cardId,
+    { $pull: { likes: req.user._id } },
+    { new: true }
+  )
     .then((card) => res.status(200).send(card))
     .catch((err) => {
       if (err.name === 'CastError') {

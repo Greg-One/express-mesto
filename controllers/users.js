@@ -39,7 +39,7 @@ const updateUserInfo = (req, res) => {
   const { name, about } = req.body;
   const { id } = req.user._id;
 
-  User.findByIdAndUpdate(id, { name, about })
+  User.findByIdAndUpdate(id, { name, about }, { new: true })
     .then((user) => {
       if (!user) {
         res.status(404).send({ message: 'User not found' });
@@ -59,7 +59,7 @@ const updateUserAvatar = (req, res) => {
   const { avatar } = req.body;
   const { id } = req.user._id;
 
-  User.findByIdAndUpdate(id, { avatar })
+  User.findByIdAndUpdate(id, { avatar }, { new: true })
     .then((user) => {
       if (!user) {
         res.status(404).send({ message: 'User not found' });
