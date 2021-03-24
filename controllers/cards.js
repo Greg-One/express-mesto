@@ -42,12 +42,7 @@ const deleteCard = (req, res) => {
 const addCardLike = (req, res) => {
   const { cardId } = req.params;
 
-  Card.findByIdAndUpdate(
-    cardId,
-    { $addToSet: { likes: req.user._id } },
-    { new: true },
-    { runValidators: true }
-  )
+  Card.findByIdAndUpdate(cardId, { $addToSet: { likes: req.user._id } }, { new: true })
     .orFail(new Error('NotValidId'))
     .then((card) => res.status(200).send(card))
     .catch((err) => {
@@ -64,12 +59,7 @@ const addCardLike = (req, res) => {
 const removeCardLike = (req, res) => {
   const { cardId } = req.params;
 
-  Card.findByIdAndUpdate(
-    cardId,
-    { $pull: { likes: req.user._id } },
-    { new: true },
-    { runValidators: true }
-  )
+  Card.findByIdAndUpdate(cardId, { $pull: { likes: req.user._id } }, { new: true })
     .orFail(new Error('NotValidId'))
     .then((card) => res.status(200).send(card))
     .catch((err) => {
