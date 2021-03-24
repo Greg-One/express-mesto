@@ -43,7 +43,8 @@ const addCardLike = (req, res) => {
   Card.findByIdAndUpdate(
     cardId,
     { $addToSet: { likes: req.user._id } },
-    { new: true }
+    { new: true },
+    { runValidators: true }
   )
     .then((card) => res.status(200).send(card))
     .catch((err) => {
@@ -61,7 +62,8 @@ const removeCardLike = (req, res) => {
   Card.findByIdAndUpdate(
     cardId,
     { $pull: { likes: req.user._id } },
-    { new: true }
+    { new: true },
+    { runValidators: true }
   )
     .then((card) => res.status(200).send(card))
     .catch((err) => {
