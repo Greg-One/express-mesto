@@ -26,14 +26,12 @@ const deleteCard = (req, res) => {
   const { cardId } = req.params;
 
   Card.findByIdAndDelete(cardId)
-    .then((card) => {
-      if (!card) {
-        res.status(404).send({ message: 'Card not found' });
-      }
-      res.status(200).send(card);
-    })
+    .orFail(new Error('NotValidId'))
+    .then((card) => res.status(200).send(card))
     .catch((err) => {
-      if (err.name === 'CastError') {
+      if (err.name === 'NotValidId') {
+        res.status(404).send({ message: 'Card not found' });
+      } else if (err.name === 'CastError') {
         res.status(400).send({ message: 'Wrong card Id' });
       } else {
         res.status(500).send({ message: `Error occured: ${err}` });
@@ -50,9 +48,12 @@ const addCardLike = (req, res) => {
     { new: true },
     { runValidators: true }
   )
+    .orFail(new Error('NotValidId'))
     .then((card) => res.status(200).send(card))
     .catch((err) => {
-      if (err.name === 'CastError') {
+      if (err.name === 'NotValidId') {
+        res.status(404).send({ message: 'Card not found' });
+      } else if (err.name === 'CastError') {
         res.status(400).send({ message: 'Wrong card Id' });
       } else {
         res.status(500).send({ message: `Error occured: ${err}` });
@@ -69,9 +70,12 @@ const removeCardLike = (req, res) => {
     { new: true },
     { runValidators: true }
   )
+    .orFail(new Error('NotValidId'))
     .then((card) => res.status(200).send(card))
     .catch((err) => {
-      if (err.name === 'CastError') {
+      if (err.name === 'NotValidId') {
+        res.status(404).send({ message: 'Card not found' });
+      } else if (err.name === 'CastError') {
         res.status(400).send({ message: 'Wrong card Id' });
       } else {
         res.status(500).send({ message: `Error occured: ${err}` });
