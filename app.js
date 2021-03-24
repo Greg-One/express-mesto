@@ -1,6 +1,7 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
+const helmet = require('helmet');
 const usersRoute = require('./routes/users');
 const cardRoute = require('./routes/cards');
 
@@ -25,6 +26,12 @@ app.use((req, res, next) => {
 
 app.use('/', usersRoute, cardRoute);
 
+app.use(helmet());
+app.disable('x-powered-by');
+
 app.listen(PORT, () => {
   console.log(`Server starts on port ${PORT}`);
 });
+
+// Спасибо за шикарное ревью! Постарался учесть все замечания
+// Вы случайно менторством не занимаетесь? :)

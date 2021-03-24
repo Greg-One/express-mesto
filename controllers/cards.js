@@ -17,7 +17,7 @@ const createCard = (req, res) => {
       if (err.name === 'ValidationError') {
         res.status(400).send({ message: 'Validation error' });
       } else {
-        res.status(500).send({ message: `Error occured: ${err}` });
+        res.status(500).send({ message: `Error occurred: ${err}` });
       }
     });
 };
@@ -26,31 +26,32 @@ const deleteCard = (req, res) => {
   const { cardId } = req.params;
 
   Card.findByIdAndDelete(cardId)
-    .then((card) => {
-      if (!card) {
-        res.status(404).send({ message: 'Card not found' });
-      }
-      res.status(200).send(card);
-    })
+    .orFail(new Error('NotValidId'))
+    .then((card) => res.status(200).send(card))
     .catch((err) => {
-      res.status(500).send({ message: `Error occured: ${err}` });
+      if (err.name === 'NotValidId') {
+        res.status(404).send({ message: 'Card not found' });
+      } else if (err.name === 'CastError') {
+        res.status(400).send({ message: 'Wrong card Id' });
+      } else {
+        res.status(500).send({ message: `Error occurred: ${err}` });
+      }
     });
 };
 
 const addCardLike = (req, res) => {
   const { cardId } = req.params;
 
-  Card.findByIdAndUpdate(
-    cardId,
-    { $addToSet: { likes: req.user._id } },
-    { new: true }
-  )
+  Card.findByIdAndUpdate(cardId, { $addToSet: { likes: req.user._id } }, { new: true })
+    .orFail(new Error('NotValidId'))
     .then((card) => res.status(200).send(card))
     .catch((err) => {
-      if (err.name === 'CastError') {
+      if (err.message === 'NotValidId') {
+        res.status(404).send({ message: 'Card not found' });
+      } else if (err.name === 'CastError') {
         res.status(400).send({ message: 'Wrong card Id' });
       } else {
-        res.status(500).send({ message: `Error occured: ${err}` });
+        res.status(500).send({ message: `Error occurred: ${err}` });
       }
     });
 };
@@ -58,17 +59,16 @@ const addCardLike = (req, res) => {
 const removeCardLike = (req, res) => {
   const { cardId } = req.params;
 
-  Card.findByIdAndUpdate(
-    cardId,
-    { $pull: { likes: req.user._id } },
-    { new: true }
-  )
+  Card.findByIdAndUpdate(cardId, { $pull: { likes: req.user._id } }, { new: true })
+    .orFail(new Error('NotValidId'))
     .then((card) => res.status(200).send(card))
     .catch((err) => {
-      if (err.name === 'CastError') {
+      if (err.message === 'NotValidId') {
+        res.status(404).send({ message: 'Card not found' });
+      } else if (err.name === 'CastError') {
         res.status(400).send({ message: 'Wrong card Id' });
       } else {
-        res.status(500).send({ message: `Error occured: ${err}` });
+        res.status(500).send({ message: `Error occurred: ${err}` });
       }
     });
 };
