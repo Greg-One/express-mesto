@@ -33,7 +33,11 @@ const deleteCard = (req, res) => {
       res.status(200).send(card);
     })
     .catch((err) => {
-      res.status(500).send({ message: `Error occured: ${err}` });
+      if (err.name === 'CastError') {
+        res.status(400).send({ message: 'Wrong card Id' });
+      } else {
+        res.status(500).send({ message: `Error occured: ${err}` });
+      }
     });
 };
 

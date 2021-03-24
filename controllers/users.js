@@ -49,6 +49,8 @@ const updateUserInfo = (req, res) => {
     .catch((err) => {
       if (err.name === 'ValidationError') {
         res.status(400).send({ message: 'Validation error' });
+      } else if (err.name === 'CastError') {
+        res.status(400).send({ message: 'Wrong user Id' });
       } else {
         res.status(500).send({ message: `Error occured: ${err}` });
       }
@@ -69,6 +71,8 @@ const updateUserAvatar = (req, res) => {
     .catch((err) => {
       if (err.name === 'ValidationError') {
         res.status(400).send({ message: 'Validation error' });
+      } else if (err.name === 'CastError') {
+        res.status(400).send({ message: 'Wrong user Id' });
       } else {
         res.status(500).send({ message: `Error occured: ${err}` });
       }
