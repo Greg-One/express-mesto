@@ -12,13 +12,15 @@ const getUserById = (req, res) => {
   const { userId } = req.params;
 
   User.findById(userId)
-    .then((user) => {
-      if (!user) {
+    .orFail(new Error('NotValidId'))
+    .then((user) => res.status(200).send(user))
+    .catch((err) => {
+      if (err.name === 'NotValidId') {
         res.status(404).send({ message: 'User not found' });
+      } else {
+        res.status(500).send({ message: `Error occured: ${err}` });
       }
-      res.status(200).send(user);
-    })
-    .catch((err) => res.status(500).send({ message: `Error occured: ${err}` }));
+    });
 };
 
 const createUser = (req, res) => {
@@ -40,14 +42,12 @@ const updateUserInfo = (req, res) => {
   const { id } = req.user._id;
 
   User.findByIdAndUpdate(id, { name, about }, { new: true })
-    .then((user) => {
-      if (!user) {
-        res.status(404).send({ message: 'User not found' });
-      }
-      res.status(200).send(user);
-    })
+    .orFail(new Error('NotValidId'))
+    .then((user) => res.status(200).send(user))
     .catch((err) => {
-      if (err.name === 'ValidationError') {
+      if (err.name === 'NotValidId') {
+        res.status(404).send({ message: 'User not found' });
+      } else if (err.name === 'ValidationError') {
         res.status(400).send({ message: 'Validation error' });
       } else if (err.name === 'CastError') {
         res.status(400).send({ message: 'Wrong user Id' });
@@ -62,14 +62,12 @@ const updateUserAvatar = (req, res) => {
   const { id } = req.user._id;
 
   User.findByIdAndUpdate(id, { avatar }, { new: true })
-    .then((user) => {
-      if (!user) {
-        res.status(404).send({ message: 'User not found' });
-      }
-      res.status(200).send(user);
-    })
+    .orFail(new Error('NotValidId'))
+    .then((user) => res.status(200).send(user))
     .catch((err) => {
-      if (err.name === 'ValidationError') {
+      if (err.name === 'NotValidId') {
+        res.status(404).send({ message: 'User not found' });
+      } else if (err.name === 'ValidationError') {
         res.status(400).send({ message: 'Validation error' });
       } else if (err.name === 'CastError') {
         res.status(400).send({ message: 'Wrong user Id' });
