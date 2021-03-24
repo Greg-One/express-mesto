@@ -15,8 +15,10 @@ const getUserById = (req, res) => {
     .orFail(new Error('NotValidId'))
     .then((user) => res.status(200).send(user))
     .catch((err) => {
-      if (err.name === 'NotValidId') {
+      if (err.message === 'NotValidId') {
         res.status(404).send({ message: 'User not found' });
+      } else if (err.name === 'CastError') {
+        res.status(400).send({ message: 'Wrong user Id' });
       } else {
         res.status(500).send({ message: `Error occurred: ${err}` });
       }
@@ -45,7 +47,7 @@ const updateUserInfo = (req, res) => {
     .orFail(new Error('NotValidId'))
     .then((user) => res.status(200).send(user))
     .catch((err) => {
-      if (err.name === 'NotValidId') {
+      if (err.message === 'NotValidId') {
         res.status(404).send({ message: 'User not found' });
       } else if (err.name === 'ValidationError') {
         res.status(400).send({ message: 'Validation error' });
@@ -65,7 +67,7 @@ const updateUserAvatar = (req, res) => {
     .orFail(new Error('NotValidId'))
     .then((user) => res.status(200).send(user))
     .catch((err) => {
-      if (err.name === 'NotValidId') {
+      if (err.message === 'NotValidId') {
         res.status(404).send({ message: 'User not found' });
       } else if (err.name === 'ValidationError') {
         res.status(400).send({ message: 'Validation error' });

@@ -46,7 +46,7 @@ const addCardLike = (req, res) => {
     .orFail(new Error('NotValidId'))
     .then((card) => res.status(200).send(card))
     .catch((err) => {
-      if (err.name === 'NotValidId') {
+      if (err.message === 'NotValidId') {
         res.status(404).send({ message: 'Card not found' });
       } else if (err.name === 'CastError') {
         res.status(400).send({ message: 'Wrong card Id' });
@@ -63,7 +63,7 @@ const removeCardLike = (req, res) => {
     .orFail(new Error('NotValidId'))
     .then((card) => res.status(200).send(card))
     .catch((err) => {
-      if (err.name === 'NotValidId') {
+      if (err.message === 'NotValidId') {
         res.status(404).send({ message: 'Card not found' });
       } else if (err.name === 'CastError') {
         res.status(400).send({ message: 'Wrong card Id' });
