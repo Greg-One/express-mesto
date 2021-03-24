@@ -32,3 +32,6 @@ app.disable('x-powered-by');
 app.listen(PORT, () => {
   console.log(`Server starts on port ${PORT}`);
 });
+
+// Спасибо за шикарное ревью! Постарался учесть все замечания
+// Вы случайно менторством не занимаетесь? :)
