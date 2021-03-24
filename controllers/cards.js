@@ -17,7 +17,7 @@ const createCard = (req, res) => {
       if (err.name === 'ValidationError') {
         res.status(400).send({ message: 'Validation error' });
       } else {
-        res.status(500).send({ message: `Error occured: ${err}` });
+        res.status(500).send({ message: `Error occurred: ${err}` });
       }
     });
 };
@@ -34,7 +34,7 @@ const deleteCard = (req, res) => {
       } else if (err.name === 'CastError') {
         res.status(400).send({ message: 'Wrong card Id' });
       } else {
-        res.status(500).send({ message: `Error occured: ${err}` });
+        res.status(500).send({ message: `Error occurred: ${err}` });
       }
     });
 };
@@ -56,7 +56,7 @@ const addCardLike = (req, res) => {
       } else if (err.name === 'CastError') {
         res.status(400).send({ message: 'Wrong card Id' });
       } else {
-        res.status(500).send({ message: `Error occured: ${err}` });
+        res.status(500).send({ message: `Error occurred: ${err}` });
       }
     });
 };
@@ -78,7 +78,7 @@ const removeCardLike = (req, res) => {
       } else if (err.name === 'CastError') {
         res.status(400).send({ message: 'Wrong card Id' });
       } else {
-        res.status(500).send({ message: `Error occured: ${err}` });
+        res.status(500).send({ message: `Error occurred: ${err}` });
       }
     });
 };

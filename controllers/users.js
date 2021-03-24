@@ -4,7 +4,7 @@ const getUsers = (req, res) => {
   User.find({})
     .then((users) => res.status(200).send(users))
     .catch((err) => {
-      res.status(500).send({ message: `Error occured: ${err}` });
+      res.status(500).send({ message: `Error occurred: ${err}` });
     });
 };
 
@@ -18,7 +18,7 @@ const getUserById = (req, res) => {
       if (err.name === 'NotValidId') {
         res.status(404).send({ message: 'User not found' });
       } else {
-        res.status(500).send({ message: `Error occured: ${err}` });
+        res.status(500).send({ message: `Error occurred: ${err}` });
       }
     });
 };
@@ -32,7 +32,7 @@ const createUser = (req, res) => {
       if (err.name === 'ValidationError') {
         res.status(400).send({ message: 'Validation error' });
       } else {
-        res.status(500).send({ message: `Error occured: ${err}` });
+        res.status(500).send({ message: `Error occurred: ${err}` });
       }
     });
 };
@@ -52,7 +52,7 @@ const updateUserInfo = (req, res) => {
       } else if (err.name === 'CastError') {
         res.status(400).send({ message: 'Wrong user Id' });
       } else {
-        res.status(500).send({ message: `Error occured: ${err}` });
+        res.status(500).send({ message: `Error occurred: ${err}` });
       }
     });
 };
@@ -72,7 +72,7 @@ const updateUserAvatar = (req, res) => {
       } else if (err.name === 'CastError') {
         res.status(400).send({ message: 'Wrong user Id' });
       } else {
-        res.status(500).send({ message: `Error occured: ${err}` });
+        res.status(500).send({ message: `Error occurred: ${err}` });
       }
     });
 };
