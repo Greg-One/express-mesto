@@ -43,7 +43,7 @@ const updateUserInfo = (req, res) => {
   const { name, about } = req.body;
   const { id } = req.user._id;
 
-  User.findByIdAndUpdate(id, { name, about }, { new: true }, { runValidators: true })
+  User.findByIdAndUpdate(id, { name, about }, { new: true, runValidators: true })
     .orFail(new Error('NotValidId'))
     .then((user) => res.status(200).send(user))
     .catch((err) => {
@@ -63,7 +63,7 @@ const updateUserAvatar = (req, res) => {
   const { avatar } = req.body;
   const { id } = req.user._id;
 
-  User.findByIdAndUpdate(id, { avatar }, { new: true }, { runValidators: true })
+  User.findByIdAndUpdate(id, { avatar }, { new: true, runValidators: true })
     .orFail(new Error('NotValidId'))
     .then((user) => res.status(200).send(user))
     .catch((err) => {
