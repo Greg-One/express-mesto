@@ -45,6 +45,23 @@ const createUser = (req, res) => {
     });
 };
 
+const loginUser = (req, res) => {
+  const { email, password } = req.body;
+
+  User.findOne({ email })
+    .orFail(new Error('NotValidData'))
+    .then((user) => {
+      bcrypt.compare(password, user.password);
+    })
+    .catch((err) => {
+      if (err.name === 'NotValidData') {
+        res.status(404).send({ message: 'Wrong email or password' });
+      } else {
+        res.status(500).send({ message: `Error occurred: ${err}` });
+      }
+    });
+};
+
 const updateUserInfo = (req, res) => {
   const { name, about } = req.body;
 
@@ -97,4 +114,5 @@ module.exports = {
   createUser,
   updateUserInfo,
   updateUserAvatar,
+  loginUser,
 };
