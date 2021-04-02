@@ -7,7 +7,7 @@ const {
   updateUserAvatar,
 } = require('../controllers/users');
 
-router.post('/users', createUser);
+router.post('/signup', createUser);
 router.get('/users/:userId', getUserById);
 router.get('/users', getUsers);
 router.patch('/users/me', updateUserInfo);
