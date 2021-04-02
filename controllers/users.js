@@ -1,5 +1,6 @@
-const User = require('../models/user');
 const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
+const User = require('../models/user');
 
 const getUsers = (req, res) => {
   User.find({})
@@ -48,10 +49,16 @@ const createUser = (req, res) => {
 const loginUser = (req, res) => {
   const { email, password } = req.body;
 
-  User.findOne({ email })
+  User.findUserByCredentials(email, password)
     .orFail(new Error('NotValidData'))
     .then((user) => {
-      bcrypt.compare(password, user.password);
+      const token = jwt.sign({ _id: user._id }, 'definetely-secret-key', { expires: '7d' });
+
+      res.cookie('jwt', token, {
+        maxAge: 3600000,
+        httpOnly: true,
+        sameSite: true,
+      }).status(200).send(user);
     })
     .catch((err) => {
       if (err.name === 'NotValidData') {
