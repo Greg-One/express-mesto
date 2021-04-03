@@ -5,6 +5,8 @@ const helmet = require('helmet');
 const usersRoute = require('./routes/users');
 const cardRoute = require('./routes/cards');
 
+require('dotenv').config();
+
 const { PORT = 3000 } = process.env;
 
 const app = express();

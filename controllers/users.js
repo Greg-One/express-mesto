@@ -50,7 +50,6 @@ const loginUser = (req, res) => {
   const { email, password } = req.body;
 
   User.findUserByCredentials(email, password)
-    .orFail(new Error('NotValidData'))
     .then((user) => {
       const token = jwt.sign({ _id: user._id }, 'definetely-secret-key', { expires: '7d' });
 
