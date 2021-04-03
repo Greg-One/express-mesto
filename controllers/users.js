@@ -70,6 +70,12 @@ const loginUser = (req, res) => {
     });
 };
 
+const getUser = (req, res) => {
+  User.findById(req.user._id)
+    .then((user) => res.status(200).send(user))
+    .catch((err) => res.send({ message: err }));
+};
+
 const updateUserInfo = (req, res) => {
   const { name, about } = req.body;
 
@@ -123,4 +129,5 @@ module.exports = {
   updateUserInfo,
   updateUserAvatar,
   loginUser,
+  getUser,
 };
