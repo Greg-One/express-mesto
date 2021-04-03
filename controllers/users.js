@@ -2,8 +2,6 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const User = require('../models/user');
 
-const { JWT_SECRET } = process.env.JWT_SECRET;
-
 const getUsers = (req, res) => {
   User.find({})
     .then((users) => res.status(200).send(users))
@@ -53,13 +51,13 @@ const loginUser = (req, res) => {
 
   User.findUserByCredentials(email, password)
     .then((user) => {
-      const token = jwt.sign({ _id: user._id }, JWT_SECRET, { expires: '7d' });
+      const token = jwt.sign({ _id: user._id }, process.env.JWT_SECRET, { expiresIn: '7d' });
 
       res.cookie('jwt', token, {
         maxAge: 3600000,
         httpOnly: true,
         sameSite: true,
-      }).send({message: 'Success'});
+      }).send({ message: 'Authorisation successful' });
     })
     .catch((err) => {
       if (err.name === 'NotValidData') {
