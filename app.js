@@ -20,14 +20,6 @@ mongoose.connect('mongodb://localhost:27017/mestodb', {
   useFindAndModify: false,
 });
 
-app.use((req, res, next) => {
-  req.user = {
-    _id: '60571d4303646a287823a59a',
-  };
-
-  next();
-});
-
 app.use('/', usersRoute, cardRoute);
 
 app.use(helmet());
