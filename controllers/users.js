@@ -70,7 +70,7 @@ const loginUser = (req, res) => {
     });
 };
 
-const getUser = (req, res) => {
+const getCurrentUser = (req, res) => {
   User.findById(req.user._id)
     .then((user) => res.status(200).send(user))
     .catch((err) => res.send({ message: err }));
@@ -129,5 +129,5 @@ module.exports = {
   updateUserInfo,
   updateUserAvatar,
   loginUser,
-  getUser,
+  getCurrentUser,
 };
