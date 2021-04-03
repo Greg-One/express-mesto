@@ -2,10 +2,12 @@ const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const helmet = require('helmet');
+const dotenv = require('dotenv');
+
+dotenv.config();
+
 const usersRoute = require('./routes/users');
 const cardRoute = require('./routes/cards');
-
-require('dotenv').config();
 
 const { PORT = 3000 } = process.env;
 
