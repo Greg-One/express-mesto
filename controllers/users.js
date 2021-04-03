@@ -59,7 +59,7 @@ const loginUser = (req, res) => {
         maxAge: 3600000,
         httpOnly: true,
         sameSite: true,
-      }).status(200).send(user);
+      }).send({message: 'Success'});
     })
     .catch((err) => {
       if (err.name === 'NotValidData') {
