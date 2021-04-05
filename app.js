@@ -7,6 +7,7 @@ const dotenv = require('dotenv');
 
 dotenv.config();
 
+const auth = require('./middlewares/auth');
 const usersRoute = require('./routes/users');
 const cardRoute = require('./routes/cards');
 const { createUser, loginUser } = require('./controllers/users');
@@ -26,7 +27,8 @@ mongoose.connect('mongodb://localhost:27017/mestodb', {
 app.post('/signup', createUser);
 app.post('/signin', loginUser);
 
-app.use('/', usersRoute, cardRoute);
+app.use('/users', auth, usersRoute);
+app.use('/cards', auth, cardRoute);
 
 app.use(helmet());
 app.disable('x-powered-by');
