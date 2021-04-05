@@ -9,6 +9,7 @@ dotenv.config();
 
 const usersRoute = require('./routes/users');
 const cardRoute = require('./routes/cards');
+const { createUser, loginUser } = require('./controllers/users');
 
 const { PORT = 3000 } = process.env;
 
@@ -21,6 +22,9 @@ mongoose.connect('mongodb://localhost:27017/mestodb', {
   useCreateIndex: true,
   useFindAndModify: false,
 });
+
+app.post('/signup', createUser);
+app.post('/signin', loginUser);
 
 app.use('/', usersRoute, cardRoute);
 
