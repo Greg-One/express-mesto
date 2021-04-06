@@ -33,6 +33,10 @@ app.use('/cards', auth, cardRoute);
 app.use(helmet());
 app.disable('x-powered-by');
 
+app.use((err, req, res, next) => {
+  res.status(err.statusCode).send({ message: err.message });
+});
+
 app.listen(PORT, () => {
   console.log(`Server starts on port ${PORT}`);
 });
