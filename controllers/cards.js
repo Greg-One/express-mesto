@@ -1,4 +1,6 @@
 const Card = require('../models/card');
+const ValidationError = require('../errors/validation-error');
+const ServerError = require('../errors/server-error');
 
 const getCards = (req, res) => {
   Card.find({})
@@ -8,18 +10,19 @@ const getCards = (req, res) => {
     });
 };
 
-const createCard = (req, res) => {
+const createCard = (req, res, next) => {
   const { name, link } = req.body;
 
   Card.create({ name, link, owner: req.user._id })
     .then((card) => res.status(200).send(card))
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        res.status(400).send({ message: 'Validation error' });
+        throw new ValidationError('Validation error');
       } else {
-        res.status(500).send({ message: `Error occurred: ${err}` });
+        throw new ServerError(`Server error: ${err}`);
       }
-    });
+    })
+    .catch(next);
 };
 
 const deleteCard = (req, res) => {
