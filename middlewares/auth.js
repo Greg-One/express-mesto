@@ -1,4 +1,5 @@
 const jwt = require('jsonwebtoken');
+const ForbiddenError = require('../errors/forbidden-error');
 
 const { JWT_SECRET } = process.env;
 
@@ -9,7 +10,7 @@ const auth = (req, res, next) => {
   try {
     payload = jwt.verify(token, JWT_SECRET);
   } catch (err) {
-    next(res.status(403).send({ message: 'Authorisation error' }));
+    next(new ForbiddenError('Authorisation error.'));
   }
 
   req.user = payload;
