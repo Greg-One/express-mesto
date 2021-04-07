@@ -6,6 +6,7 @@ const ServerError = require('../errors/server-error');
 const NotFoundError = require('../errors/not-found-error');
 const CastError = require('../errors/cast-error');
 const AuthorisationError = require('../errors/authorisation-error');
+const ConflictError = require('../errors/conflict-error');
 
 const { JWT_SECRET } = process.env;
 
@@ -49,6 +50,8 @@ const createUser = (req, res, next) => {
     .catch((err) => {
       if (err.name === 'ValidationError') {
         throw new ValidationError('Validation error');
+      } else if (err.name === 'MongoError' && err.code === 11000) {
+        throw new ConflictError('User already exists');
       } else {
         throw new ServerError(`Server error: ${err}`);
       }
