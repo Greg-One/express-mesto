@@ -4,12 +4,13 @@ const ServerError = require('../errors/server-error');
 const NotFoundError = require('../errors/not-found-error');
 const CastError = require('../errors/cast-error');
 
-const getCards = (req, res) => {
+const getCards = (req, res, next) => {
   Card.find({})
     .then((cards) => res.status(200).send(cards))
     .catch((err) => {
-      res.status(500).send({ message: `Error occurred: ${err}` });
-    });
+      throw new ServerError(`Server error: ${err}`);
+    })
+    .catch(next);
 };
 
 const createCard = (req, res, next) => {
