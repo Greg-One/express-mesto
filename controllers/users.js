@@ -1,18 +1,24 @@
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const User = require('../models/user');
+const ValidationError = require('../errors/validation-error');
+const ServerError = require('../errors/server-error');
+const NotFoundError = require('../errors/not-found-error');
+const CastError = require('../errors/cast-error');
+const AuthorisationError = require('../errors/authorisation-error');
 
 const { JWT_SECRET } = process.env;
 
-const getUsers = (req, res) => {
+const getUsers = (req, res, next) => {
   User.find({})
     .then((users) => res.status(200).send(users))
     .catch((err) => {
-      res.status(500).send({ message: `Error occurred: ${err}` });
-    });
+      throw new ServerError(`Server error: ${err}`);
+    })
+    .catch(next);
 };
 
-const getUserById = (req, res) => {
+const getUserById = (req, res, next) => {
   const { userId } = req.params;
 
   User.findById(userId)
@@ -20,16 +26,17 @@ const getUserById = (req, res) => {
     .then((user) => res.status(200).send(user))
     .catch((err) => {
       if (err.message === 'NotValidId') {
-        res.status(404).send({ message: 'User not found' });
+        throw new NotFoundError('User not found');
       } else if (err.name === 'CastError') {
-        res.status(400).send({ message: 'Wrong user Id' });
+        throw new CastError('Wrong user Id');
       } else {
-        res.status(500).send({ message: `Error occurred: ${err}` });
+        throw new ServerError(`Server error: ${err}`);
       }
-    });
+    })
+    .catch(next);
 };
 
-const createUser = (req, res) => {
+const createUser = (req, res, next) => {
   const {
     name, about, avatar, email, password,
   } = req.body;
@@ -41,14 +48,15 @@ const createUser = (req, res) => {
     .then((user) => res.status(201).send(user))
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        res.status(400).send({ message: 'Validation error' });
+        throw new ValidationError('Validation error');
       } else {
-        res.status(500).send({ message: `Error occurred: ${err}` });
+        throw new ServerError(`Server error: ${err}`);
       }
-    });
+    })
+    .catch(next);
 };
 
-const loginUser = (req, res) => {
+const loginUser = (req, res, next) => {
   const { email, password } = req.body;
 
   User.findUserByCredentials(email, password)
@@ -62,12 +70,13 @@ const loginUser = (req, res) => {
       }).send({ message: 'Authorisation successful' });
     })
     .catch((err) => {
-      if (err.name === 'NotValidData') {
-        res.status(404).send({ message: 'Wrong email or password' });
+      if (err.name === 'Error') {
+        throw new AuthorisationError('Wrong email or password');
       } else {
-        res.status(500).send({ message: `Error occurred: ${err}` });
+        throw new ServerError(`Server error: ${err}`);
       }
-    });
+    })
+    .catch(next);
 };
 
 const getCurrentUser = (req, res) => {
@@ -76,7 +85,7 @@ const getCurrentUser = (req, res) => {
     .catch((err) => res.send({ message: err }));
 };
 
-const updateUserInfo = (req, res) => {
+const updateUserInfo = (req, res, next) => {
   const { name, about } = req.body;
 
   User.findByIdAndUpdate(
@@ -88,18 +97,19 @@ const updateUserInfo = (req, res) => {
     .then((user) => res.status(200).send(user))
     .catch((err) => {
       if (err.message === 'NotValidId') {
-        res.status(404).send({ message: 'User not found' });
+        throw new NotFoundError('User not found');
       } else if (err.name === 'ValidationError') {
-        res.status(400).send({ message: 'Validation error' });
+        throw new ValidationError('Validation error');
       } else if (err.name === 'CastError') {
-        res.status(400).send({ message: 'Wrong user Id' });
+        throw new CastError('Wrong user Id');
       } else {
-        res.status(500).send({ message: `Error occurred: ${err}` });
+        throw new ServerError(`Server error: ${err}`);
       }
-    });
+    })
+    .catch(next);
 };
 
-const updateUserAvatar = (req, res) => {
+const updateUserAvatar = (req, res, next) => {
   const { avatar } = req.body;
 
   User.findByIdAndUpdate(
@@ -111,15 +121,16 @@ const updateUserAvatar = (req, res) => {
     .then((user) => res.status(200).send(user))
     .catch((err) => {
       if (err.message === 'NotValidId') {
-        res.status(404).send({ message: 'User not found' });
+        throw new NotFoundError('User not found');
       } else if (err.name === 'ValidationError') {
-        res.status(400).send({ message: 'Validation error' });
+        throw new ValidationError('Validation error');
       } else if (err.name === 'CastError') {
-        res.status(400).send({ message: 'Wrong user Id' });
+        throw new CastError('Wrong user Id');
       } else {
-        res.status(500).send({ message: `Error occurred: ${err}` });
+        throw new ServerError(`Server error: ${err}`);
       }
-    });
+    })
+    .catch(next);
 };
 
 module.exports = {
