@@ -1,6 +1,8 @@
 const Card = require('../models/card');
 const ValidationError = require('../errors/validation-error');
 const ServerError = require('../errors/server-error');
+const NotFoundError = require('../errors/not-found-error');
+const CastError = require('../errors/cast-error');
 
 const getCards = (req, res) => {
   Card.find({})
@@ -42,7 +44,7 @@ const deleteCard = (req, res) => {
     });
 };
 
-const addCardLike = (req, res) => {
+const addCardLike = (req, res, next) => {
   const { cardId } = req.params;
 
   Card.findByIdAndUpdate(cardId, { $addToSet: { likes: req.user._id } }, { new: true })
@@ -50,16 +52,17 @@ const addCardLike = (req, res) => {
     .then((card) => res.status(200).send(card))
     .catch((err) => {
       if (err.message === 'NotValidId') {
-        res.status(404).send({ message: 'Card not found' });
+        throw new NotFoundError('Card not found');
       } else if (err.name === 'CastError') {
-        res.status(400).send({ message: 'Wrong card Id' });
+        throw new CastError('Wrong card Id');
       } else {
-        res.status(500).send({ message: `Error occurred: ${err}` });
+        throw new ServerError(`Server error: ${err}`);
       }
-    });
+    })
+    .catch(next);
 };
 
-const removeCardLike = (req, res) => {
+const removeCardLike = (req, res, next) => {
   const { cardId } = req.params;
 
   Card.findByIdAndUpdate(cardId, { $pull: { likes: req.user._id } }, { new: true })
@@ -67,13 +70,14 @@ const removeCardLike = (req, res) => {
     .then((card) => res.status(200).send(card))
     .catch((err) => {
       if (err.message === 'NotValidId') {
-        res.status(404).send({ message: 'Card not found' });
+        throw new NotFoundError('Card not found');
       } else if (err.name === 'CastError') {
-        res.status(400).send({ message: 'Wrong card Id' });
+        throw new CastError('Wrong card Id');
       } else {
-        res.status(500).send({ message: `Error occurred: ${err}` });
+        throw new ServerError(`Server error: ${err}`);
       }
-    });
+    })
+    .catch(next);
 };
 
 module.exports = {
