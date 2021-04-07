@@ -28,7 +28,7 @@ const createCard = (req, res, next) => {
     .catch(next);
 };
 
-const deleteCard = (req, res) => {
+const deleteCard = (req, res, next) => {
   const { cardId } = req.params;
 
   Card.findByIdAndDelete(cardId)
@@ -36,13 +36,14 @@ const deleteCard = (req, res) => {
     .then((card) => res.status(200).send(card))
     .catch((err) => {
       if (err.message === 'NotValidId') {
-        res.status(404).send({ message: 'Card not found' });
+        throw new NotFoundError('Card not found');
       } else if (err.name === 'CastError') {
-        res.status(400).send({ message: 'Wrong card Id' });
+        throw new CastError('Wrong card Id');
       } else {
-        res.status(500).send({ message: `Error occurred: ${err}` });
+        throw new ServerError(`Server error: ${err}`);
       }
-    });
+    })
+    .catch(next);
 };
 
 const addCardLike = (req, res, next) => {
