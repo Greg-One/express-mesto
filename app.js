@@ -48,7 +48,9 @@ app.use(helmet());
 app.disable('x-powered-by');
 
 app.use((err, req, res, next) => {
-  res.status(err.statusCode).send({ message: err.message });
+  const { statusCode = 500, message } = err;
+  res.status(statusCode).send({ message: statusCode === 500 ? 'Server error occurred' : message });
+
   next();
 });
 
