@@ -82,10 +82,20 @@ const loginUser = (req, res, next) => {
     .catch(next);
 };
 
-const getCurrentUser = (req, res) => {
+const getCurrentUser = (req, res, next) => {
   User.findById(req.user._id)
+    .orFail(new Error('NotValidId'))
     .then((user) => res.status(200).send(user))
-    .catch((err) => res.send({ message: err }));
+    .catch((err) => {
+      if (err.message === 'NotValidId') {
+        throw new NotFoundError('User not found');
+      } else if (err.name === 'CastError') {
+        throw new CastError('Wrong user Id');
+      } else {
+        throw new ServerError(`Server error: ${err}`);
+      }
+    })
+    .catch(next);
 };
 
 const updateUserInfo = (req, res, next) => {
