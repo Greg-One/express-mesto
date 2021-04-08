@@ -1,45 +1,54 @@
 const Card = require('../models/card');
+const ValidationError = require('../errors/validation-error');
+const NotFoundError = require('../errors/not-found-error');
+const CastError = require('../errors/cast-error');
+const ForbiddenError = require('../errors/forbidden-error');
 
-const getCards = (req, res) => {
+const getCards = (req, res, next) => {
   Card.find({})
     .then((cards) => res.status(200).send(cards))
-    .catch((err) => {
-      res.status(500).send({ message: `Error occured: ${err}` });
-    });
+    .catch(next);
 };
 
-const createCard = (req, res) => {
+const createCard = (req, res, next) => {
   const { name, link } = req.body;
 
   Card.create({ name, link, owner: req.user._id })
     .then((card) => res.status(200).send(card))
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        res.status(400).send({ message: 'Validation error' });
-      } else {
-        res.status(500).send({ message: `Error occurred: ${err}` });
+        throw new ValidationError('Validation error');
       }
-    });
+
+      next(err);
+    })
+    .catch(next);
 };
 
-const deleteCard = (req, res) => {
+const deleteCard = (req, res, next) => {
   const { cardId } = req.params;
 
-  Card.findByIdAndDelete(cardId)
-    .orFail(new Error('NotValidId'))
+  Card.findById(cardId)
+    .then((card) => {
+      if (card.owner.toString() !== req.user._id) {
+        throw new ForbiddenError('You have no permission to delete other users cards');
+      }
+
+      Card.findByIdAndDelete(cardId)
+        .catch(next);
+    })
     .then((card) => res.status(200).send(card))
     .catch((err) => {
-      if (err.message === 'NotValidId') {
-        res.status(404).send({ message: 'Card not found' });
-      } else if (err.name === 'CastError') {
-        res.status(400).send({ message: 'Wrong card Id' });
-      } else {
-        res.status(500).send({ message: `Error occurred: ${err}` });
+      if (err.name === 'CastError') {
+        throw new CastError('Wrong card Id');
       }
-    });
+
+      next(err);
+    })
+    .catch(next);
 };
 
-const addCardLike = (req, res) => {
+const addCardLike = (req, res, next) => {
   const { cardId } = req.params;
 
   Card.findByIdAndUpdate(cardId, { $addToSet: { likes: req.user._id } }, { new: true })
@@ -47,16 +56,17 @@ const addCardLike = (req, res) => {
     .then((card) => res.status(200).send(card))
     .catch((err) => {
       if (err.message === 'NotValidId') {
-        res.status(404).send({ message: 'Card not found' });
+        throw new NotFoundError('Card not found');
       } else if (err.name === 'CastError') {
-        res.status(400).send({ message: 'Wrong card Id' });
-      } else {
-        res.status(500).send({ message: `Error occurred: ${err}` });
+        throw new CastError('Wrong card Id');
       }
-    });
+
+      next(err);
+    })
+    .catch(next);
 };
 
-const removeCardLike = (req, res) => {
+const removeCardLike = (req, res, next) => {
   const { cardId } = req.params;
 
   Card.findByIdAndUpdate(cardId, { $pull: { likes: req.user._id } }, { new: true })
@@ -64,13 +74,14 @@ const removeCardLike = (req, res) => {
     .then((card) => res.status(200).send(card))
     .catch((err) => {
       if (err.message === 'NotValidId') {
-        res.status(404).send({ message: 'Card not found' });
+        throw new NotFoundError('Card not found');
       } else if (err.name === 'CastError') {
-        res.status(400).send({ message: 'Wrong card Id' });
-      } else {
-        res.status(500).send({ message: `Error occurred: ${err}` });
+        throw new CastError('Wrong card Id');
       }
-    });
+
+      next(err);
+    })
+    .catch(next);
 };
 
 module.exports = {
