@@ -49,7 +49,7 @@ app.disable('x-powered-by');
 
 app.use((err, req, res, next) => {
   const { statusCode = 500, message } = err;
-  res.status(statusCode).send({ message: statusCode === 500 ? 'Server error occurred' : message });
+  res.status(statusCode).send({ message: statusCode === 500 ? `Server error occurred: ${err}` : message });
 
   next();
 });

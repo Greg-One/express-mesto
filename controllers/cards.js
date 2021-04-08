@@ -1,6 +1,5 @@
 const Card = require('../models/card');
 const ValidationError = require('../errors/validation-error');
-const ServerError = require('../errors/server-error');
 const NotFoundError = require('../errors/not-found-error');
 const CastError = require('../errors/cast-error');
 const ForbiddenError = require('../errors/forbidden-error');
@@ -8,9 +7,6 @@ const ForbiddenError = require('../errors/forbidden-error');
 const getCards = (req, res, next) => {
   Card.find({})
     .then((cards) => res.status(200).send(cards))
-    .catch((err) => {
-      throw new ServerError(`Server error: ${err}`);
-    })
     .catch(next);
 };
 
@@ -22,11 +18,10 @@ const createCard = (req, res, next) => {
     .catch((err) => {
       if (err.name === 'ValidationError') {
         throw new ValidationError('Validation error');
-      } else {
-        throw new ServerError(`Server error: ${err}`);
       }
-    })
-    .catch(next);
+
+      next(err);
+    });
 };
 
 const deleteCard = (req, res, next) => {
@@ -45,11 +40,10 @@ const deleteCard = (req, res, next) => {
     .catch((err) => {
       if (err.name === 'CastError') {
         throw new CastError('Wrong card Id');
-      } else {
-        throw new ServerError(`Server error: ${err}`);
       }
-    })
-    .catch(next);
+
+      next(err);
+    });
 };
 
 const addCardLike = (req, res, next) => {
@@ -63,11 +57,10 @@ const addCardLike = (req, res, next) => {
         throw new NotFoundError('Card not found');
       } else if (err.name === 'CastError') {
         throw new CastError('Wrong card Id');
-      } else {
-        throw new ServerError(`Server error: ${err}`);
       }
-    })
-    .catch(next);
+
+      next(err);
+    });
 };
 
 const removeCardLike = (req, res, next) => {
@@ -81,11 +74,10 @@ const removeCardLike = (req, res, next) => {
         throw new NotFoundError('Card not found');
       } else if (err.name === 'CastError') {
         throw new CastError('Wrong card Id');
-      } else {
-        throw new ServerError(`Server error: ${err}`);
       }
-    })
-    .catch(next);
+
+      next(err);
+    });
 };
 
 module.exports = {
