@@ -2,7 +2,6 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const User = require('../models/user');
 const ValidationError = require('../errors/validation-error');
-const ServerError = require('../errors/server-error');
 const NotFoundError = require('../errors/not-found-error');
 const CastError = require('../errors/cast-error');
 const AuthorisationError = require('../errors/authorisation-error');
@@ -13,9 +12,6 @@ const { JWT_SECRET } = process.env;
 const getUsers = (req, res, next) => {
   User.find({})
     .then((users) => res.status(200).send(users))
-    .catch((err) => {
-      throw new ServerError(`Server error: ${err}`);
-    })
     .catch(next);
 };
 
@@ -30,11 +26,10 @@ const getUserById = (req, res, next) => {
         throw new NotFoundError('User not found');
       } else if (err.name === 'CastError') {
         throw new CastError('Wrong user Id');
-      } else {
-        throw new ServerError(`Server error: ${err}`);
       }
-    })
-    .catch(next);
+
+      next(err);
+    });
 };
 
 const createUser = (req, res, next) => {
@@ -52,11 +47,10 @@ const createUser = (req, res, next) => {
         throw new ValidationError('Validation error');
       } else if (err.name === 'MongoError' && err.code === 11000) {
         throw new ConflictError('User already exists');
-      } else {
-        throw new ServerError(`Server error: ${err}`);
       }
-    })
-    .catch(next);
+
+      next(err);
+    });
 };
 
 const loginUser = (req, res, next) => {
@@ -75,11 +69,10 @@ const loginUser = (req, res, next) => {
     .catch((err) => {
       if (err.name === 'Error') {
         throw new AuthorisationError('Wrong email or password');
-      } else {
-        throw new ServerError(`Server error: ${err}`);
       }
-    })
-    .catch(next);
+
+      next(err);
+    });
 };
 
 const getCurrentUser = (req, res, next) => {
@@ -91,11 +84,10 @@ const getCurrentUser = (req, res, next) => {
         throw new NotFoundError('User not found');
       } else if (err.name === 'CastError') {
         throw new CastError('Wrong user Id');
-      } else {
-        throw new ServerError(`Server error: ${err}`);
       }
-    })
-    .catch(next);
+
+      next(err);
+    });
 };
 
 const updateUserInfo = (req, res, next) => {
@@ -115,11 +107,10 @@ const updateUserInfo = (req, res, next) => {
         throw new ValidationError('Validation error');
       } else if (err.name === 'CastError') {
         throw new CastError('Wrong user Id');
-      } else {
-        throw new ServerError(`Server error: ${err}`);
       }
-    })
-    .catch(next);
+
+      next(err);
+    });
 };
 
 const updateUserAvatar = (req, res, next) => {
@@ -139,11 +130,10 @@ const updateUserAvatar = (req, res, next) => {
         throw new ValidationError('Validation error');
       } else if (err.name === 'CastError') {
         throw new CastError('Wrong user Id');
-      } else {
-        throw new ServerError(`Server error: ${err}`);
       }
-    })
-    .catch(next);
+
+      next(err);
+    });
 };
 
 module.exports = {
