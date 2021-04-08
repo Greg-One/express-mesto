@@ -50,7 +50,8 @@ const createUser = (req, res, next) => {
       }
 
       next(err);
-    });
+    })
+    .catch(next);
 };
 
 const loginUser = (req, res, next) => {
@@ -72,7 +73,8 @@ const loginUser = (req, res, next) => {
       }
 
       next(err);
-    });
+    })
+    .catch(next);
 };
 
 const getCurrentUser = (req, res, next) => {
@@ -87,7 +89,8 @@ const getCurrentUser = (req, res, next) => {
       }
 
       next(err);
-    });
+    })
+    .catch(next);
 };
 
 const updateUserInfo = (req, res, next) => {
@@ -110,7 +113,8 @@ const updateUserInfo = (req, res, next) => {
       }
 
       next(err);
-    });
+    })
+    .catch(next);
 };
 
 const updateUserAvatar = (req, res, next) => {
@@ -133,7 +137,8 @@ const updateUserAvatar = (req, res, next) => {
       }
 
       next(err);
-    });
+    })
+    .catch(next);
 };
 
 module.exports = {

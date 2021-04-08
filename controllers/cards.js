@@ -21,7 +21,8 @@ const createCard = (req, res, next) => {
       }
 
       next(err);
-    });
+    })
+    .catch(next);
 };
 
 const deleteCard = (req, res, next) => {
@@ -43,7 +44,8 @@ const deleteCard = (req, res, next) => {
       }
 
       next(err);
-    });
+    })
+    .catch(next);
 };
 
 const addCardLike = (req, res, next) => {
@@ -60,7 +62,8 @@ const addCardLike = (req, res, next) => {
       }
 
       next(err);
-    });
+    })
+    .catch(next);
 };
 
 const removeCardLike = (req, res, next) => {
@@ -77,7 +80,8 @@ const removeCardLike = (req, res, next) => {
       }
 
       next(err);
-    });
+    })
+    .catch(next);
 };
 
 module.exports = {
