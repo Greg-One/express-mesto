@@ -29,7 +29,8 @@ const getUserById = (req, res, next) => {
       }
 
       next(err);
-    });
+    })
+    .catch(next);
 };
 
 const createUser = (req, res, next) => {
