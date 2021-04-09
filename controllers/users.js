@@ -68,7 +68,7 @@ const loginUser = (req, res, next) => {
       }).send({ message: 'Authorisation successful' });
     })
     .catch((err) => {
-      if (err.name === 'Error') {
+      if (err.statusCode === 401) {
         throw new AuthorisationError('Wrong email or password');
       }
 
