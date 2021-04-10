@@ -7,7 +7,7 @@ const CastError = require('../errors/cast-error');
 const AuthorisationError = require('../errors/authorisation-error');
 const ConflictError = require('../errors/conflict-error');
 
-const { JWT_SECRET } = process.env;
+const { JWT_SECRET, NODE_ENV } = process.env;
 
 const getUsers = (req, res, next) => {
   User.find({})
@@ -68,7 +68,9 @@ const loginUser = (req, res, next) => {
 
   User.findUserByCredentials(email, password)
     .then((user) => {
-      const token = jwt.sign({ _id: user._id }, JWT_SECRET, { expiresIn: '7d' });
+      const token = jwt.sign({ _id: user._id },
+        NODE_ENV === 'production' ? JWT_SECRET : 'such-key',
+        { expiresIn: '7d' });
 
       res.cookie('jwt', token, {
         maxAge: 3600000,
