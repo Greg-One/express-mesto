@@ -87,10 +87,6 @@ const loginUser = (req, res, next) => {
     })
     .catch(next);
 };
-// Я немного поменял обработку ошибки, но у меня и до этого и cейчас всё работает без проблем
-// Регистрация http://puu.sh/HwEym/1ab569122a.png
-// Логин http://puu.sh/HwEyJ/9f3c777e64.png
-// Запрос текущего пользователя http://puu.sh/HwEB5/e10280112e.png
 
 const getCurrentUser = (req, res, next) => {
   User.findById(req.user._id)
