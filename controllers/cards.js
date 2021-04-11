@@ -31,7 +31,7 @@ const deleteCard = (req, res, next) => {
   Card.findById(cardId)
     .orFail(new Error('NotValidId'))
     .then((card) => {
-      if (card.owner.toString() !== req.user._id) {
+      if (!card.owner.equals(req.user._id)) {
         throw new ForbiddenError('You have no permission to delete other users cards');
       }
 
