@@ -35,7 +35,7 @@ const deleteCard = (req, res, next) => {
         throw new ForbiddenError('You have no permission to delete other users cards');
       }
 
-      Card.remove(card)
+      card.remove()
         .catch(next);
     })
     .then(() => res.status(200).send({ message: 'Card successfully deleted' }))
