@@ -107,6 +107,10 @@ const getCurrentUser = (req, res, next) => {
 const updateUserInfo = (req, res, next) => {
   const { name, about } = req.body;
 
+  // if (!name || !about) {
+  //   throw new ValidationError('Name or about inputs should not be empty');
+  // }
+
   User.findByIdAndUpdate(
     req.user._id,
     { name, about },

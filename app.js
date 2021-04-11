@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const helmet = require('helmet');
 const cookieParser = require('cookie-parser');
-const { celebrate, Joi } = require('celebrate');
+const { celebrate, Joi, errors } = require('celebrate');
 const dotenv = require('dotenv');
 
 dotenv.config();
@@ -47,6 +47,7 @@ app.use('/cards', auth, cardRoute);
 app.use(helmet());
 app.disable('x-powered-by');
 
+app.use(errors());
 app.use((err, req, res, next) => {
   const { statusCode = 500, message } = err;
   res.status(statusCode).send({ message: statusCode === 500 ? `${err}` : message });
