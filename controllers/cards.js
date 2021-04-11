@@ -29,6 +29,7 @@ const deleteCard = (req, res, next) => {
   const { cardId } = req.params;
 
   Card.findById(cardId)
+    .orFail(new Error('NotValidId'))
     .then((card) => {
       if (card.owner.toString() !== req.user._id) {
         throw new ForbiddenError('You have no permission to delete other users cards');
@@ -41,6 +42,8 @@ const deleteCard = (req, res, next) => {
     .catch((err) => {
       if (err.name === 'CastError') {
         throw new CastError('Wrong card Id');
+      } else if (err.message === 'NotValidId') {
+        throw new NotFoundError('Card not found');
       }
 
       next(err);
