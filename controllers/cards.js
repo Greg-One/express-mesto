@@ -35,10 +35,10 @@ const deleteCard = (req, res, next) => {
         throw new ForbiddenError('You have no permission to delete other users cards');
       }
 
-      Card.findByIdAndDelete(cardId)
+      Card.remove(card)
         .catch(next);
     })
-    .then((card) => res.status(200).send(card))
+    .then(() => res.status(200).send({ message: 'Card successfully deleted' }))
     .catch((err) => {
       if (err.name === 'CastError') {
         throw new CastError('Wrong card Id');
