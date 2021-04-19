@@ -55,6 +55,12 @@ app.use((err, req, res, next) => {
   next();
 });
 
+app.get('/crash-test', () => {
+  setTimeout(() => {
+    throw new Error('Serrev is about to become offline');
+  }, 0);
+});
+
 app.listen(PORT, () => {
   console.log(`Server starts on port ${PORT}`);
 });
