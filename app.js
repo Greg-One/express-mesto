@@ -25,6 +25,12 @@ mongoose.connect('mongodb://localhost:27017/mestodb', {
   useFindAndModify: false,
 });
 
+app.get('/crash-test', () => {
+  setTimeout(() => {
+    throw new Error('Server is about to become offline');
+  }, 0);
+});
+
 app.post('/signup', celebrate({
   body: Joi.object().keys({
     email: Joi.string().required().email(),
@@ -53,12 +59,6 @@ app.use((err, req, res, next) => {
   res.status(statusCode).send({ message: statusCode === 500 ? `${err}` : message });
 
   next();
-});
-
-app.get('/crash-test', () => {
-  setTimeout(() => {
-    throw new Error('Serrev is about to become offline');
-  }, 0);
 });
 
 app.listen(PORT, () => {
