@@ -19,7 +19,9 @@ const { PORT = 3000 } = process.env;
 const app = express();
 app.use(bodyParser.json());
 app.use(cookieParser());
-app.use(cors());
+app.use(cors({
+  origin: 'hhtp://onemore.mesto.nomoredomains.club',
+}));
 
 mongoose.connect('mongodb://localhost:27017/mestodb', {
   useNewUrlParser: true,
