@@ -13,12 +13,15 @@ const auth = require('./middlewares/auth');
 const usersRoute = require('./routes/users');
 const cardRoute = require('./routes/cards');
 const { createUser, loginUser } = require('./controllers/users');
+const { requestLogger, errorLogger } = require('./middlewares/logger');
 
 const { PORT = 3000 } = process.env;
 
 const app = express();
 app.use(bodyParser.json());
 app.use(cookieParser());
+app.use(helmet());
+app.disable('x-powered-by');
 app.use(cors({
   origin: 'hhtp://onemore.mesto.nomoredomains.club',
 }));
@@ -28,6 +31,8 @@ mongoose.connect('mongodb://localhost:27017/mestodb', {
   useCreateIndex: true,
   useFindAndModify: false,
 });
+
+app.use(requestLogger);
 
 app.get('/crash-test', () => {
   setTimeout(() => {
@@ -54,8 +59,7 @@ app.post('/signin', celebrate({
 app.use('/users', auth, usersRoute);
 app.use('/cards', auth, cardRoute);
 
-app.use(helmet());
-app.disable('x-powered-by');
+app.use(errorLogger);
 
 app.use(errors());
 app.use((err, req, res, next) => {
