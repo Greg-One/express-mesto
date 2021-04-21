@@ -20,16 +20,16 @@ const app = express();
 app.use(bodyParser.json());
 app.use(cookieParser());
 
-app.use(cors({
-  origin: 'https://onemore.mesto.nomoredomains.club',
-  credentials: true,
-}));
-
 mongoose.connect('mongodb://localhost:27017/mestodb', {
   useNewUrlParser: true,
   useCreateIndex: true,
   useFindAndModify: false,
 });
+
+app.use(cors({
+  origin: 'https://onemore.mesto.nomoredomains.club',
+  credentials: true,
+}));
 
 app.get('/crash-test', () => {
   setTimeout(() => {
