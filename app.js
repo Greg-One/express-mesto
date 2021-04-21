@@ -21,7 +21,8 @@ app.use(bodyParser.json());
 app.use(cookieParser());
 
 app.use(cors({
-  origin: 'http://onemore.mesto.nomoredomains.club',
+  origin: 'https://onemore.mesto.nomoredomains.club',
+  credentials: true,
 }));
 
 mongoose.connect('mongodb://localhost:27017/mestodb', {
