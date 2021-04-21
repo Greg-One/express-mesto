@@ -23,7 +23,7 @@ app.use(cookieParser());
 app.use(helmet());
 app.disable('x-powered-by');
 app.use(cors({
-  origin: 'hhtp://onemore.mesto.nomoredomains.club',
+  origin: 'http://onemore.mesto.nomoredomains.club',
 }));
 
 mongoose.connect('mongodb://localhost:27017/mestodb', {
