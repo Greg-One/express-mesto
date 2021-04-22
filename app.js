@@ -22,9 +22,6 @@ app.use(bodyParser.json());
 app.use(cookieParser());
 app.use(helmet());
 app.disable('x-powered-by');
-app.use(cors({
-  origin: 'http://onemore.mesto.nomoredomains.club',
-}));
 
 mongoose.connect('mongodb://localhost:27017/mestodb', {
   useNewUrlParser: true,
@@ -33,6 +30,10 @@ mongoose.connect('mongodb://localhost:27017/mestodb', {
 });
 
 app.use(requestLogger);
+app.use(cors({
+  origin: 'http://onemore.mesto.nomoredomains.club',
+  credentials: true,
+}));
 
 app.get('/crash-test', () => {
   setTimeout(() => {
