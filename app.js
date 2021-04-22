@@ -14,6 +14,7 @@ const usersRoute = require('./routes/users');
 const cardRoute = require('./routes/cards');
 const { createUser, loginUser } = require('./controllers/users');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
+const NotFoundError = require('./errors/not-found-error');
 
 const { PORT = 3000 } = process.env;
 
@@ -68,6 +69,9 @@ app.use((err, req, res, next) => {
   res.status(statusCode).send({ message: statusCode === 500 ? `${err}` : message });
 
   next();
+});
+app.use('*', () => {
+  throw new NotFoundError('Page not found');
 });
 
 app.listen(PORT, () => {
