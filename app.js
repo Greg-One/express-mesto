@@ -31,7 +31,7 @@ mongoose.connect('mongodb://localhost:27017/mestodb', {
 
 app.use(requestLogger);
 app.use(cors({
-  origin: 'http://onemore.mesto.nomoredomains.club',
+  origin: 'https://onemore.mesto.nomoredomains.club',
   credentials: true,
 }));
 
