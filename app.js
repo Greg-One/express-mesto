@@ -64,14 +64,14 @@ app.use('/cards', auth, cardRoute);
 app.use(errorLogger);
 
 app.use(errors());
+app.use('*', () => {
+  throw new NotFoundError('Page not found');
+});
 app.use((err, req, res, next) => {
   const { statusCode = 500, message } = err;
   res.status(statusCode).send({ message: statusCode === 500 ? `${err}` : message });
 
   next();
-});
-app.use('*', () => {
-  throw new NotFoundError('Page not found');
 });
 
 app.listen(PORT, () => {
